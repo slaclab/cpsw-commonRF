@@ -12,12 +12,10 @@ INSTALL_DIR=../
 HEADERS += rfCommon.h 
 HEADERS += llrfDownConverter.h 
 HEADERS += llrfUpConverter.h
-HEADERS += atcaCommon.h
 
 commonRF_SRCS += rfCommon.cc 
 commonRF_SRCS += llrfDownConverter.cc
 commonRF_SRCS += llrfUpConverter.cc
-commonRF_SRCS += atcaCommon.cc
 commonRF_LIBS = $(CPSW_LIBS)
 
 
