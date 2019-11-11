@@ -11,6 +11,8 @@ typedef shared_ptr<IRFCommonFw> RFCommonFw;
 class IRFCommonFw : public virtual IEntry {
 public:
     static RFCommonFw create(Path p);
+    virtual void createStream(Path p)                                  = 0;
+    virtual uint32_t readStream(void *buf, uint64_t size, int idx)     = 0;
     virtual void getDemodVersion(uint32_t *version)                    = 0;
     virtual double getPhase(uint32_t *raw_phase, int idx)              = 0;
     virtual double getAmp(uint32_t *raw_amp, int idx)                  = 0;

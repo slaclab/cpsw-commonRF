@@ -11,7 +11,8 @@
 #include <string.h>
 #include <math.h>
 
-#define  MAX_CHN 12
+#define  MAX_CHN   12
+#define  MAX_STREAM 8
 
 #define CPSW_TRY_CATCH(X)       try {   \
         (X);                            \
@@ -94,9 +95,13 @@ class CRFCommonFwAdapt : public IRFCommonFw, public IEntryAdapt {
         ScalVal          _dacMin;
         ScalVal          _dacMax;
 
+        Stream           _stream[MAX_STREAM];
+
     public:
         CRFCommonFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie);
 
+        virtual void createStream(Path p);
+        virtual uint32_t readStream(void *buf, uint64_t size, int idx);
         virtual void getDemodVersion(uint32_t *version);
         virtual double getPhase(uint32_t *raw_phase, int idx);
         virtual double getAmp(uint32_t *raw_amp, int idx);
@@ -223,6 +228,20 @@ CRFCommonFwAdapt::CRFCommonFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryI
         sprintf(name, "setI[%d]", i);  _setI[i]  = IScalVal::create(_pLlrfDemod->findByName(name));
         sprintf(name, "setQ[%d]", i);  _setQ[i]  = IScalVal::create(_pLlrfDemod->findByName(name));
     }
+
+}
+
+void CRFCommonFwAdapt::createStream(Path p)
+{
+    for(int i = 0; i < MAX_STREAM; i++) {
+        char stream_name[80];
+        sprintf(stream_name, "Stream%d", i); _stream[i] = IStream::create(p->findByName(stream_name));
+    }
+}
+
+uint32_t CRFCommonFwAdapt::readStream(void *buf, uint64_t size, int idx)
+{
+    return _stream[idx]->read((uint8_t *) buf, size, CTimeout());
 }
 
 void CRFCommonFwAdapt::getDemodVersion(uint32_t *version)
