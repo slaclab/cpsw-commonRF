@@ -14,8 +14,11 @@ public:
     virtual void createStream(Path p)                                  = 0;
     virtual uint32_t readStream(void *buf, uint64_t size, int idx)     = 0;
     virtual void getDemodVersion(uint32_t *version)                    = 0;
+    virtual void maxHoldReset(uint32_t val)                            = 0;
     virtual double getPhase(uint32_t *raw_phase, int idx)              = 0;
     virtual double getAmp(uint32_t *raw_amp, int idx)                  = 0;
+    virtual double getMaxPhase(uint32_t *raw_phase, int idx)           = 0;
+    virtual double getMaxAmp(uint32_t *raw_amp, int idx)               = 0;
     virtual void getRotationIQ(uint32_t *i, uint32_t *q, int idx)      = 0;
     virtual void setRotationIQ(uint32_t i,  uint32_t  q, int idx)      = 0;
     virtual void setRotationPA(double phase, double amp, int idx)      = 0;

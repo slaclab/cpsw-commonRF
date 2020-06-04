@@ -1,3 +1,6 @@
+R1.1.0        Jun-04-2020     Kukhee Kim
+              - implement phase/amplitude max hold and reset for RF Demod
+
 R1.0.0        Jan-29-2020     Kukhee Kim
               - build with buildroot-2019.08
               - build against cpsw/framework R4.4.1

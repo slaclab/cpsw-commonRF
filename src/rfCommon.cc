@@ -39,8 +39,13 @@ class CRFCommonFwAdapt : public IRFCommonFw, public IEntryAdapt {
         ScalVal_RO       _demod_version;
         ScalVal_RO       _phase[MAX_CHN];
         ScalVal_RO       _amp[MAX_CHN];
+        ScalVal_RO       _phaseMaxHold[MAX_CHN];
+        ScalVal_RO       _ampMaxHold[MAX_CHN];
+
         ScalVal          _setI[MAX_CHN];
         ScalVal          _setQ[MAX_CHN];
+
+        ScalVal          _maxHoldReset;
 
         // registers for llrfPll
         ScalVal_RO       _pll_version;
@@ -103,8 +108,11 @@ class CRFCommonFwAdapt : public IRFCommonFw, public IEntryAdapt {
         virtual void createStream(Path p);
         virtual uint32_t readStream(void *buf, uint64_t size, int idx);
         virtual void getDemodVersion(uint32_t *version);
+        virtual void maxHoldReset(uint32_t val);
         virtual double getPhase(uint32_t *raw_phase, int idx);
         virtual double getAmp(uint32_t *raw_amp, int idx);
+        virtual double getMaxPhase(uint32_t *raw_phase, int idx);
+        virtual double getMaxAmp(uint32_t *raw_amp, int idx);
         virtual void getRotationIQ(uint32_t *i, uint32_t *q, int idx);
         virtual void setRotationIQ(uint32_t  i, uint32_t  q, int idx);
         virtual void setRotationPA(double phase, double amp, int idx);
@@ -170,6 +178,7 @@ CRFCommonFwAdapt::CRFCommonFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryI
     _pLlrfUpConverter(p->findByName("LlrfUpconvert")),
     // registers for LlrfDemod
     _demod_version(IScalVal_RO::create(_pLlrfDemod->findByName("version"))),
+    _maxHoldReset( IScalVal   ::create(_pLlrfDemod->findByName("maxHoldReset"))),
     // register for LlrfPll
     _pll_version(   IScalVal_RO::create(_pLlrfPll->findByName("version"))),
     _loPhase(       IScalVal_RO::create(_pLlrfPll->findByName("loPllPhase"))),
@@ -225,6 +234,10 @@ CRFCommonFwAdapt::CRFCommonFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryI
         char name[80];
         sprintf(name, "phase[%d]",i);  _phase[i] = IScalVal_RO::create(_pLlrfDemod->findByName(name));
         sprintf(name, "amp[%d]",  i);  _amp[i]   = IScalVal_RO::create(_pLlrfDemod->findByName(name));
+        sprintf(name, "phaseMaxHold[%d]", i);
+                                       _phaseMaxHold[i] = IScalVal_RO::create(_pLlrfDemod->findByName(name));
+        sprintf(name, "ampMaxHold[%d]", i);
+                                      _ampMaxHold[i] = IScalVal_RO::create(_pLlrfDemod->findByName(name));
         sprintf(name, "setI[%d]", i);  _setI[i]  = IScalVal::create(_pLlrfDemod->findByName(name));
         sprintf(name, "setQ[%d]", i);  _setQ[i]  = IScalVal::create(_pLlrfDemod->findByName(name));
     }
@@ -247,6 +260,11 @@ uint32_t CRFCommonFwAdapt::readStream(void *buf, uint64_t size, int idx)
 void CRFCommonFwAdapt::getDemodVersion(uint32_t *version)
 {
     CPSW_TRY_CATCH(_demod_version->getVal(version))
+}
+
+void CRFCommonFwAdapt::maxHoldReset(uint32_t val)
+{
+    CPSW_TRY_CATCH(_maxHoldReset->setVal(val?1:0));
 }
 
 void CRFCommonFwAdapt::getPllVersion(uint32_t *version)
@@ -275,6 +293,28 @@ double CRFCommonFwAdapt::getAmp(uint32_t *raw_amp, int idx)
     double amp;
 
     CPSW_TRY_CATCH(_amp[idx]->getVal(raw_amp))
+    
+    amp = ((double)(short)(*raw_amp))/32767.;
+
+    return amp;
+}
+
+double CRFCommonFwAdapt::getMaxPhase(uint32_t *raw_phase, int idx)
+{
+    double phase;
+
+    CPSW_TRY_CATCH(_phaseMaxHold[idx]->getVal(raw_phase))
+
+    phase = ((double)(short)(*raw_phase))/32767. * 180.;
+
+    return phase;
+}
+
+double CRFCommonFwAdapt::getMaxAmp(uint32_t *raw_amp, int idx)
+{
+    double amp;
+
+    CPSW_TRY_CATCH(_ampMaxHold[idx]->getVal(raw_amp))
     
     amp = ((double)(short)(*raw_amp))/32767.;
 
