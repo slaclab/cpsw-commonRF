@@ -48,6 +48,7 @@ public:
     virtual void clockPolarity(uint32_t val)                           = 0;
     virtual void setLODac(uint32_t val)                                = 0;
     virtual void setClockDac(uint32_t val)                             = 0;
+    virtual void setUserDac(uint32_t val)                              = 0;
     virtual void setLOPhase(uint32_t val)                              = 0;
     virtual void setClockPhase(uint32_t val)                           = 0;
     virtual void setLOKp(uint32_t val)                                 = 0;
