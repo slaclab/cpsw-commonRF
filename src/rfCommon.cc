@@ -75,6 +75,7 @@ class CRFCommonFwAdapt : public IRFCommonFw, public IEntryAdapt {
         ScalVal          _clockPolarity;
         ScalVal          _loDacSet;
         ScalVal          _clockDacSet;
+        ScalVal          _userDacSet;
         ScalVal          _loPhaseSet;
         ScalVal          _clockPhaseSet;
         ScalVal          _loKp;
@@ -142,6 +143,7 @@ class CRFCommonFwAdapt : public IRFCommonFw, public IEntryAdapt {
         virtual void clockPolarity(uint32_t val);
         virtual void setLODac(uint32_t val);
         virtual void setClockDac(uint32_t val);
+        virtual void setUserDac(uint32_t val);
         virtual void setLOPhase(uint32_t val);
         virtual void setClockPhase(uint32_t val);
         virtual void setLOKp(uint32_t val);
@@ -204,6 +206,7 @@ CRFCommonFwAdapt::CRFCommonFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryI
     _clockPolarity(       IScalVal::create(_pLlrfPll->findByName("clockPllPolarity"))),
     _loDacSet(            IScalVal::create(_pLlrfPll->findByName("loDacSet"))),
     _clockDacSet(         IScalVal::create(_pLlrfPll->findByName("clockDacSet"))),
+    _userDacSet(          IScalVal::create(_pLlrfPll->findByName("userDacSet"))),
     _loPhaseSet(          IScalVal::create(_pLlrfPll->findByName("loPllPhaseSet"))),
     _clockPhaseSet(       IScalVal::create(_pLlrfPll->findByName("clockPllPhaseSet"))),
     _loKp(                IScalVal::create(_pLlrfPll->findByName("loPllKp"))),
@@ -502,6 +505,11 @@ void CRFCommonFwAdapt::setLODac(uint32_t val)
 void CRFCommonFwAdapt::setClockDac(uint32_t val)
 {
     CPSW_TRY_CATCH(_clockDacSet->setVal(val))
+}
+
+void CRFCommonFwAdapt::setUserDac(uint32_t val)
+{
+    CPSW_TRY_CATCH(_userDacSet->setVal(val))
 }
 
 void CRFCommonFwAdapt::setLOPhase(uint32_t val)
