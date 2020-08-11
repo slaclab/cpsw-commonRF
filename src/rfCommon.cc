@@ -64,8 +64,8 @@ class CRFCommonFwAdapt : public IRFCommonFw, public IEntryAdapt {
 
         ScalVal          _lockThreshold;
         ScalVal          _lossThreshold;
-        ScalVal          _loLockCountReset;
-        ScalVal          _clockLockCountReset;
+        Command          _resetLOLockCount;
+        Command          _resetClockLockCount;
         ScalVal          _loDacControlMux;
         ScalVal          _clockDacControlMux;
         ScalVal          _userDacControlMux;
@@ -132,8 +132,8 @@ class CRFCommonFwAdapt : public IRFCommonFw, public IEntryAdapt {
         virtual void setLockThreshold(uint32_t  val);
         virtual void getLossThreshold(uint32_t *val);
         virtual void setLossThreshold(uint32_t  val);
-        virtual void loLockCountReset(uint32_t  val);
-        virtual void clockLockCountReset(uint32_t val);
+        virtual void resetLOLockCount();
+        virtual void resetClockLockCount();
         virtual void loDacControlMux(uint32_t val);
         virtual void clockDacControlMux(uint32_t val);
         virtual void userDacControlMux(uint32_t val);
@@ -195,8 +195,8 @@ CRFCommonFwAdapt::CRFCommonFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryI
     _clockLoss(     IScalVal_RO::create(_pLlrfPll->findByName("clockPllLossOfSignal"))),
     _lockThreshold(       IScalVal::create(_pLlrfPll->findByName("lossOfLockThreshold"))),
     _lossThreshold(       IScalVal::create(_pLlrfPll->findByName("lossOfSignalThreshold"))),
-    _loLockCountReset(    IScalVal::create(_pLlrfPll->findByName("loPllLockedCounterReset"))),
-    _clockLockCountReset( IScalVal::create(_pLlrfPll->findByName("clockPllLockedCounterReset"))),
+    _resetLOLockCount(    ICommand::create(_pLlrfPll->findByName("ResetLOPllLockedCounter"))),
+    _resetClockLockCount( ICommand::create(_pLlrfPll->findByName("ResetClockPllLockedCounter"))),
     _loDacControlMux(     IScalVal::create(_pLlrfPll->findByName("loDacControlMux"))),
     _clockDacControlMux(  IScalVal::create(_pLlrfPll->findByName("clockDacControlMux"))),
     _userDacControlMux(   IScalVal::create(_pLlrfPll->findByName("userDacControlMux"))),
@@ -444,14 +444,14 @@ void CRFCommonFwAdapt::setLossThreshold(uint32_t val)
     CPSW_TRY_CATCH(_lossThreshold->setVal(val))
 }
 
-void CRFCommonFwAdapt::loLockCountReset(uint32_t val)
+void CRFCommonFwAdapt::resetLOLockCount()
 {
-    CPSW_TRY_CATCH(_loLockCountReset->setVal(val))
+    CPSW_TRY_CATCH(_resetLOLockCount->execute())
 }
 
-void CRFCommonFwAdapt::clockLockCountReset(uint32_t val)
+void CRFCommonFwAdapt::resetClockLockCount()
 {
-    CPSW_TRY_CATCH(_clockLockCountReset->setVal(val))
+    CPSW_TRY_CATCH(_resetClockLockCount->execute())
 }
 
 

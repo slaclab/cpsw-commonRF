@@ -37,8 +37,8 @@ public:
     virtual void setLockThreshold(uint32_t  val)                       = 0;
     virtual void getLossThreshold(uint32_t *val)                       = 0;
     virtual void setLossThreshold(uint32_t  val)                       = 0;
-    virtual void loLockCountReset(uint32_t  val)                       = 0;
-    virtual void clockLockCountReset(uint32_t val)                     = 0;
+    virtual void resetLOLockCount()                                    = 0;
+    virtual void resetClockLockCount()                                 = 0;
     virtual void loDacControlMux(uint32_t val)                         = 0;
     virtual void clockDacControlMux(uint32_t val)                      = 0;
     virtual void userDacControlMux(uint32_t val)                       = 0;
