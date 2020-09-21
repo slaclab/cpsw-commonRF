@@ -69,6 +69,7 @@ public:
     virtual void setDacOffset(uint32_t val)                            = 0;
     virtual void setDacMin(uint32_t val)                               = 0;
     virtual void setDacMax(uint32_t val)                               = 0;
+    virtual void setCorrectionGain(uint32_t val)                       = 0;
 
 };
 

@@ -1,3 +1,6 @@
+R1.4.0        Sep-21-2020    Kukhee Kim
+              - add correctionGain for upConverter
+
 R1.3.0        Aug-11-2020     Jesus Vasquez
               - Use CPSW Commands to reset the PLL lock counters, instead 
                 of interfacing directly to the reset register.

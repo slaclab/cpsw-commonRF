@@ -100,6 +100,7 @@ class CRFCommonFwAdapt : public IRFCommonFw, public IEntryAdapt {
         ScalVal          _dacOffset;
         ScalVal          _dacMin;
         ScalVal          _dacMax;
+        ScalVal          _correctionGain;
 
         Stream           _stream[MAX_STREAM];
 
@@ -164,6 +165,7 @@ class CRFCommonFwAdapt : public IRFCommonFw, public IEntryAdapt {
         virtual void setDacOffset(uint32_t val);
         virtual void setDacMin(uint32_t val);
         virtual void setDacMax(uint32_t val);
+        virtual void setCorrectionGain(uint32_t val);
 };
 
 RFCommonFw IRFCommonFw::create(Path p)
@@ -229,7 +231,8 @@ CRFCommonFwAdapt::CRFCommonFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryI
     _basebandQSet(  IScalVal::create(_pLlrfUpConverter->findByName("basebandQSet"))),
     _dacOffset(     IScalVal::create(_pLlrfUpConverter->findByName("dacOffset"))),
     _dacMin(        IScalVal::create(_pLlrfUpConverter->findByName("dacMin"))),
-    _dacMax(        IScalVal::create(_pLlrfUpConverter->findByName("dacMax")))
+    _dacMax(        IScalVal::create(_pLlrfUpConverter->findByName("dacMax"))),
+    _correctionGain(IScalVal::create(_pLlrfUpConverter->findByName("correctionGain")))
 
 
 {
@@ -677,6 +680,11 @@ void CRFCommonFwAdapt::setDacMin(uint32_t val)
 void CRFCommonFwAdapt::setDacMax(uint32_t val)
 {
     CPSW_TRY_CATCH(_dacMax->setVal(val))
+}
+
+void CRFCommonFwAdapt::setCorrectionGain(uint32_t val)
+{
+    CPSW_TRY_CATCH(_correctionGain->setVal(val))
 }
 
 
